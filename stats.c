@@ -9,13 +9,13 @@
  *
  *****************************************************************************/
 /**
- * @file <stats.c> 
- * @brief <my first assessment>
+ * @file stats.c
+ * @brief The implementation file of the c1m1 assignment
  *
- * 
+ * This file includes all the required functions implementations in the c1m1 assignment
  *
- * @author <ankit saini>
- * @date <2021-09-03>
+ * @ankit saini
+ * @date 10/9/2021
  *
  */
 
@@ -36,104 +36,96 @@ void main() {
                                 7,  87, 250, 230,  99,   3, 100,  90};
 
   /* Other Variable Declarations Go Here */
+  unsigned char minimum = 0;
+  unsigned char maximum = 0;
+  float mean = 0;
+  unsigned char median = 0;
+
   /* Statistics and Printing Functions Go Here */
-
-
-print_statics(test,SIZE);
-print_statics(test,SIZE);
-/* Add other Implementation File Code Here */
+  printf("Array before sorting: \n");
+  print_array(&test, SIZE);
+  median = find_median(&test, SIZE);
+  mean = find_mean(&test, SIZE);
+  maximum = find_maximum(&test, SIZE);
+  minimum = find_minimum(&test, SIZE);
+  print_statistics(minimum, maximum, mean, median);
+  sort_array(&test, SIZE);
+  printf("Array after sorting: \n");
+  print_array(&test, SIZE);
 }
 
-unsigned char print_statics(unsigned char *arr_pointer, unsigned int arr_size)
-{
-	print_array(arr_pointer, arr_size);
-	printf("median : %d \n", find_median(arr_pointer,arr_size));
-	printf("mean : %d \n", find_mean(arr_pointer, arr_size));
-	printf("maximum : %d \n", find_maximum(arr_pointer,arr_size));
-	printf("minimum : %d \n", find_minimum(arr_pointer,arr_size));
-}
-unsigned char print_array(unsigned char *arr_pointer, unsigned int arr_size)
-{	
-	printf("[");
-	for(int i=0;i<SIZE;i++)
-	{ 
-	printf("%d ", arr_pointer[i]);
-	};
-	printf("]\n");
-	
+void print_statistics (unsigned char minimum, unsigned char maximum, float mean, unsigned char median){
+  printf("The minimum is %d \n", minimum);
+  printf("The maximum is %d \n", maximum);
+  printf("The mean is %f \n", mean);
+  printf("The median is %d \n", median);
 }
 
-unsigned char find_median(unsigned char *arr_pointer, unsigned int arr_size)
-{
-	int tmp;
-	for(int i=0;i<SIZE;i++)
-	{		
-		for(int j=i+1;j<SIZE;j++)
-		{
-			if(arr_pointer[i]>arr_pointer[j])
-			{
-				tmp=arr_pointer[i];
-				arr_pointer[i]=arr_pointer[j];
-				arr_pointer[j]=tmp;
-			}
-		}
-	};
-	
-	if(SIZE%2==0){return (arr_pointer[SIZE/2-1]+arr_pointer[SIZE/2])/2;}
-	else{return arr_pointer[SIZE/2];}
-	
-	
+
+void print_array (unsigned char *array, unsigned int counter){
+  for (int i=0; i<counter; i++){
+    printf("%d,", *(array + i));
+  }
+  printf("\n");
 }
 
-unsigned char find_mean(unsigned char *arr_pointer, unsigned int arr_size)
-{
-	int sum;
-	for(int i=0;i<SIZE;i++)
-	{
-		sum+=arr_pointer[i];
-	}
-	return sum/SIZE;
+unsigned char find_median (unsigned char *array, unsigned int counter){
+  unsigned char median = 0;
+  median = *(array + (counter / 2) -1);
+  return median;
 }
 
-unsigned char find_maximum(unsigned char *arr_pointer, unsigned int arr_size)
-{
-	int max=arr_pointer[0];
-	for(int i=0;i<SIZE;i++)
-	{
-		if(max<arr_pointer[i])
-		{
-			max=arr_pointer[i];
-		}
-	}
-	return max;
+float find_mean (unsigned char *array, unsigned int counter){
+  unsigned int accumulator = 0; // variable to store the accumulator value throughout the mean finding process
+  float mean = 0;
+  for (int i=0; i<counter; i++){
+    accumulator = accumulator + array[i] /* *(array + i) */;
+  }
+  printf("acc = %d \n", accumulator);
+  mean = accumulator / ((float) counter); //must type cast one of the two integers to float for accurate calculation.
+  return mean;
 }
 
-unsigned char find_minimum(unsigned char *arr_pointer, unsigned int arr_size)
-{
-	int min=arr_pointer[0];
-	for(int i=0;i<SIZE;i++)
-	{
-		if(min>arr_pointer[i])
-		{
-			min=arr_pointer[i];
-		}
-	}
-	return min;
+unsigned char find_maximum (unsigned char *array, unsigned int counter){
+  unsigned char maximum = *array; // initalize the maximum variable with the value of the first array element
+  for (int i=1; i<counter; i++){ // start the loop from the second elemnt
+    if (*(array + i) > maximum){
+      maximum = *(array + i);
+    }
+    else {} // do nothing.
+  }
+  return maximum;
 }
 
-unsigned char sort_array(unsigned char *arr_pointer, unsigned int arr_size)
-{
-	int tmp;
-	for(int i=0;i<SIZE;i++)
-	{		
-		for(int j=i+1;j<SIZE;j++)
-		{
-			if(arr_pointer[i]<arr_pointer[j])
-			{
-				tmp=arr_pointer[i];
-				arr_pointer[i]=arr_pointer[j];
-				arr_pointer[j]=tmp;
-			}
-		}
-	};
+unsigned char find_minimum (unsigned char *array, unsigned int counter){
+  unsigned char minimum = *array; // initalize the minimum variable with the value of the first array element
+  for (int i=1; i<counter; i++){ // start the loop from the second elemnt
+    if (*(array + i) < minimum){
+      minimum = *(array + i);
+    }
+    else {} // do nothing.
+  }
+  return minimum;
+}
+
+void sort_array (unsigned char *array, unsigned int counter){
+  char flag = 0; //this flag is to indicate if a swap process has occurred at least once in the loop
+  unsigned char temp;
+  do {
+    flag =0; //set flag to default at every new 'do' operation
+    for (int index=0; index<counter; index++){
+      if (array[index] > array[index +1] || array[index] == array[index +1]) {
+        continue;
+      }
+      else if (array[index] < array[index +1]) {
+        //swap elements//
+        temp = array[index];
+        array[index] = array[index+1];
+        array[index+1] = temp;
+
+        flag = 1; // a swap process has occurred at least once in this loop
+      }
+    }
+  }
+  while (flag ==1); // the array is not sorted as long as a swap operation is occurred at least once
 }
